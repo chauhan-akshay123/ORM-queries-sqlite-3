@@ -1,126 +1,153 @@
 # Employee Management API
 
-This is an Express-based API for managing employee records. The API allows you to seed the database with initial employee data, retrieve all employees, fetch employee details by specific criteria, and sort employees by salary. Sequelize ORM is used to interact with a SQL-compatible database (default is SQLite).
+This project is an Employee Management API built with Node.js, Express, and Sequelize (with a MySQL/PostgreSQL/SQLite database). It allows users to perform CRUD operations on employee data, including creating, reading, updating, deleting, and filtering employees based on their attributes.
 
 ## Features
 
-- Seed the database with sample employee data
-- Fetch all employees
-- Fetch employee details by ID
-- Retrieve employees by department
-- Sort employees by salary in ascending or descending order
+- **Database Seeding**: Seed the database with initial employee data.
+- **CRUD Operations**:
+- Create a new employee record.
+- Retrieve all employees or filter employees by specific criteria.
+- Update an employee's details by ID.
+- Delete an employee record by ID.
+- **Filtering and Sorting**:
+- Retrieve employees by department.
+- Sort employees based on their salary.
 
-## Prerequisites
+## Endpoints
 
-- **Node.js** and **npm** installed on your system
-- **SQLite** database (default), or you can configure Sequelize for other SQL databases
+### 1. Seed Database
 
-## Getting Started
-
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/your-username/employee-management-api.git
-   cd employee-management-api
-   ```
-
-2. **Install Dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Configure Sequelize:**
-   Ensure that `sequelize` is configured in the `lib/index.js` file to connect to your preferred database. By default, SQLite is used.
-
-4. **Start the Server:**
-   ```bash
-   node app.js
-   ```
-
-   The server will run at [http://localhost:3000](http://localhost:3000).
-
-## API Endpoints
-
-### 1. Seed the Database
+Seeds the database with a list of sample employees.
 
 - **URL**: `/seed_db`
 - **Method**: `GET`
-- **Description**: Seeds the database with initial employee data.
-- **Response**:
-  - `200 OK`: `{"message": "Database seeding successful."}`
-  - `500 Internal Server Error`: `{"message": "Error seeding the database", "error": "error message"}`
+- **Response**: `{ message: "Database seeding successful." }`
 
 ### 2. Fetch All Employees
 
+Retrieves all employee records.
+
 - **URL**: `/employees`
 - **Method**: `GET`
-- **Description**: Fetches all employee records.
-- **Response**:
-  - `200 OK`: `{ "employees": [ ... ] }`
-  - `404 Not Found`: `{"message": "No employee found."}`
-  - `500 Internal Server Error`: `{"message": "Error fetching employees", "error": "error message"}`
+- **Response**: `{ employees: [...] }` (Returns an array of all employee records)
 
 ### 3. Fetch Employee by ID
 
+Fetches details of a specific employee based on their ID.
+
 - **URL**: `/employees/details/:id`
 - **Method**: `GET`
-- **Description**: Fetches a specific employee by their ID.
-- **Response**:
-  - `200 OK`: `{ "employee": { ... } }`
-  - `404 Not Found`: `{"message": "Employee not found."}`
-  - `500 Internal Server Error`: `{"message": "Error fetching employee by ID", "error": "error message"}`
+- **Response**: `{ employee: {...} }` (Returns the employee details)
 
 ### 4. Fetch Employees by Department
 
+Fetches employees based on their department.
+
 - **URL**: `/employees/department/:department`
 - **Method**: `GET`
-- **Description**: Retrieves all employees in a specific department.
-- **Response**:
-  - `200 OK`: `{ "employees": [ ... ] }`
-  - `404 Not Found`: `{"message": "No employees found."}`
-  - `500 Internal Server Error`: `{"message": "Error fetching employees by department", "error": "error message"}`
+- **Response**: `{ employees: [...] }` (Returns employees in the specified department)
 
 ### 5. Sort Employees by Salary
 
+Sorts employees by salary in ascending or descending order.
+
 - **URL**: `/employees/sort/salary`
 - **Method**: `GET`
-- **Description**: Sorts employees by their salary in ascending or descending order.
-- **Query Parameter**: `order` (values: `ASC` for ascending, `DESC` for descending)
-- **Response**:
-  - `200 OK`: `{ "employees": [ ... ] }`
-  - `404 Not Found`: `{"message": "No employees found."}`
-  - `500 Internal Server Error`: `{"message": "Error fetching sorted employees", "error": "error message"}`
+- **Query Params**: `order` (`ASC` or `DESC`)
+- **Response**: `{ employees: [...] }` (Returns employees sorted by salary)
 
-## Example Usage
+### 6. Add New Employee
 
-1. **Seed the Database**
-   ```bash
-   curl http://localhost:3000/seed_db
-   ```
+Adds a new employee record.
 
-2. **Fetch All Employees**
-   ```bash
-   curl http://localhost:3000/employees
-   ```
+- **URL**: `/employees/new`
+- **Method**: `POST`
+- **Request Body**: `{ newEmployee: {...} }`
+- **Response**: `{ newEmployee: {...} }` (Returns the newly created employee)
 
-3. **Fetch Employee by ID**
-   ```bash
-   curl http://localhost:3000/employees/details/1
-   ```
+### 7. Update Employee by ID
 
-4. **Fetch Employees by Department**
-   ```bash
-   curl http://localhost:3000/employees/department/Engineering
-   ```
+Updates an existing employee's information.
 
-5. **Sort Employees by Salary (Descending)**
-   ```bash
-   curl "http://localhost:3000/employees/sort/salary?order=desc"
-   ```
+- **URL**: `/employees/update/:id`
+- **Method**: `POST`
+- **Request Body**: `{ ...updatedFields }`
+- **Response**: `{ message: "Employee has been updated successfully.", updatedEmployee: {...} }`
+
+### 8. Delete Employee by ID
+
+Deletes an employee record based on the provided ID.
+
+- **URL**: `/employees/delete`
+- **Method**: `POST`
+- **Request Body**: `{ id: employeeId }`
+- **Response**: `{ message: "Employee record has been deleted successfully." }`
+
+## Setup and Installation
+
+1. Clone this repository:
+
+```bash
+git clone https://github.com/your-username/employee-management-api.git
+cd employee-management-api
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up your database in the `lib/index.js` file (using Sequelize), with a configuration like this:
+
+```javascript
+const { Sequelize } = require('sequelize');
+const sequelize = new Sequelize('database', 'username', 'password', {
+host: 'localhost',
+dialect: 'mysql' // or 'postgres' or 'sqlite' as per your database
+});
+```
+
+4. Run the server:
+
+```bash
+node index.js
+```
+
+The server should be running on `http://localhost:3000`.
 
 ## Technologies Used
 
-- **Express** - For building the API
-- **Sequelize** - ORM for managing the database
-- **SQLite** - Default database (can be configured for other databases)
-- **Cors** - Enables cross-origin requests
+- **Node.js** and **Express**: For backend API creation.
+- **Sequelize**: For ORM and database interaction.
+- **MySQL/PostgreSQL/SQLite**: For data storage.
+- **Cors**: To allow cross-origin requests.
 
+## Error Handling
+
+Errors are handled with appropriate HTTP status codes and error messages. Common responses include:
+
+- **404 Not Found**: For non-existent employee records.
+- **500 Internal Server Error**: For any unexpected issues.
+
+## Example Usage
+
+To seed the database, visit:
+
+```
+http://localhost:3000/seed_db
+```
+
+To add a new employee, use a POST request to `/employees/new` with employee data in the body. For example:
+
+```json
+{
+"newEmployee": {
+"name": "Alice Johnson",
+"designation": "Developer",
+"department": "Engineering",
+"salary": 80000
+}
+}
+```
